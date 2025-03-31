@@ -24,7 +24,7 @@ jobs:
       - name: Deploy to IIS
         uses: cschleiden/webdeploy-action@v1
         with:
-          webSiteName: 'cv-roaster'
+          webSiteName: 'Default Web Site'
           package: './publish'
           removeAdditionalFilesFlag: true
           takeAppOfflineFlag: true
