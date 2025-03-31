@@ -1,0 +1,30 @@
+name: Deploy to IIS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish Application
+        run: dotnet publish -c Release -o ./publish
+
+      - name: Deploy to IIS
+        uses: cschleiden/webdeploy-action@v1
+        with:
+          webSiteName: 'cv-roaster'
+          package: './publish'
+          removeAdditionalFilesFlag: true
+          takeAppOfflineFlag: true
