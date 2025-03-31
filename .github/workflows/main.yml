@@ -21,10 +21,19 @@ jobs:
       - name: Publish Application
         run: dotnet publish -c Release -o ./publish
 
-      - name: Deploy to IIS
-        uses: cschleiden/webdeploy-action@v1
-        with:
-          webSiteName: 'Default Web Site'
-          package: './publish'
-          removeAdditionalFilesFlag: true
-          takeAppOfflineFlag: true
+      - name: Stop IIS Website
+        run: |
+          Import-Module WebAdministration
+          Stop-WebSite -Name "Default Web Site"
+        shell: powershell
+
+      - name: Deploy Application
+        run: |
+          Remove-Item -Recurse -Force "C:\inetpub\wwwroot\cv-roaster\*"
+          Copy-Item -Recurse -Force ./publish/* "C:\inetpub\wwwroot\cv-roaster\"
+        shell: powershell
+
+      - name: Start IIS Website
+        run: |
+          Start-WebSite -Name "Default Web Site"
+        shell: powershell
